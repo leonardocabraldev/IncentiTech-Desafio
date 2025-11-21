@@ -41,6 +41,34 @@ namespace Domain.LavaCar.Entitites
             };
         }
 
+        public void Update(int serviceId, string clientName, DateTime scheduledDateTime)
+        {
+            bool changed = false;
+
+            if (ServiceId != serviceId)
+            {
+                ServiceId = serviceId;
+                changed = true;
+            }
+
+            if (ClientName != clientName)
+            {
+                ClientName = clientName;
+                changed = true;
+            }
+
+            if (ScheduledDateTime != scheduledDateTime)
+            {
+                ScheduledDateTime = scheduledDateTime;
+                changed = true;
+            }
+
+            if (changed)
+            {
+                UpdatedAt = DateTime.Now;
+            }
+        }
+
         public void Disable()
         {
             IsActive = false;

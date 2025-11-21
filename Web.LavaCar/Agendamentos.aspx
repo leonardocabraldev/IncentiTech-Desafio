@@ -8,76 +8,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="~/Content/Global.css" rel="stylesheet" />
     <style>
-        body, html { height: 100%; }
-        .page-wrapper {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            padding-top: 1rem;
-            padding-bottom: 1rem;
-        }
-        .content-flex { flex: 1; display: flex; flex-direction: column; }
-        .scroll-area {
-            flex: 1;
-            max-height: 60vh;
-            overflow-y: auto;
-            border: 1px solid #e5e5e5;
-            border-radius: .75rem;
-            background: #fff;
-        }
-        .pagination-bar button.active {
-            background:#0d6efd;
-            color:#fff;
-            border-color:#0d6efd;
-        }
 
-        .dashboard-card {
-            border: none;
-            border-radius: 1rem;
-            background: #ffffff;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .dashboard-header {
-            padding: 1.7rem;
-            border-bottom: 1px solid #e5e5e5;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .dashboard-header h2 {
-            margin: 0;
-            font-weight: 700;
-            color: #333;
-        }
-
-        .dashboard-header i {
-            font-size: 1.9rem;
-            color: #0d6efd;
-        }
-
-        
-        .dashboard-footer {
-            border-top: 1px solid #e5e5e5;
-            padding: 0.9rem 1.2rem;
-            background: #fff;
-            border-radius: 0 0 1rem 1rem;
-        }
-        .dashboard-footer .btn {
-            border-radius: 8px;
-        }
-        .dashboard-footer .page-btn.active {
-            background:#0d6efd; color:#fff; border-color:#0d6efd;
-        }
     </style>
 </head>
 <body>
 <form id="form1" runat="server">
     <div class="container page-wrapper">
         <div class="content-flex">
-            <div class="dashboard-card p-0 mb-3">
+            <div class="dashboard-card p-0">
                  <div class="dashboard-header">
                      <h2><i class="bi bi-calendar-check"></i> Agendamentos</h2>
 
@@ -85,7 +25,7 @@
                          <button id="Button1" runat="server"
                                  onserverclick="btnNovo_Click"
                                  class="btn btn-primary btn-modern d-flex align-items-center justify-content-center gap-2">
-                             <i class="bi bi-plus-lg me-1 text-white fs-6"></i> Novo Serviço
+                             <i class="bi bi-plus-lg me-1 text-white fs-6"></i> Novo Agendamento
                          </button>
 
                          <asp:Button ID="Button2" runat="server" Text="Voltar"
@@ -121,41 +61,27 @@
                     </asp:GridView>
                 </div>
             </div>
-
-            <!-- PAGINAÇÃO -->
             <div class="dashboard-footer">
-                <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
-                    <asp:Label ID="lblPaginaInfo" runat="server" CssClass="fw-semibold mb-2 mb-md-0"></asp:Label>
+                <div class="d-flex justify-content-between align-items-center">
 
-                    <div class="d-flex align-items-center gap-1 flex-wrap">
-                        <asp:LinkButton ID="lnkFirst" runat="server" CssClass="btn btn-outline-primary btn-sm"
-                            OnClick="btnFirst_Click" ToolTip="Primeira">««</asp:LinkButton>
+                    <asp:Label ID="lblPaginaInfo" runat="server"
+                        CssClass="fw-semibold"></asp:Label>
 
-                        <asp:LinkButton ID="lnkPrev" runat="server" CssClass="btn btn-outline-primary btn-sm"
-                            OnClick="btnPrev_Click" ToolTip="Anterior">«</asp:LinkButton>
+                    <div class="d-flex gap-2">
+                        <asp:Button ID="btnAnterior" runat="server"
+                            Text="Anterior"
+                            CssClass="btn btn-outline-primary btn-sm"
+                            OnClick="btnAnterior_Click" />
 
-                        <asp:Repeater ID="rptPaginacao" runat="server" OnItemCommand="rptPaginacao_ItemCommand">
-                            <ItemTemplate>
-                                <asp:LinkButton runat="server"
-                                    CssClass='<%# "btn btn-sm page-btn " + ((bool)Eval("IsCurrent") ? "active" : "btn-light border") %>'
-                                    CommandName="GoPage"
-                                    CommandArgument='<%# Eval("PageNumber") %>'>
-                                    <%# Eval("PageNumber") %>
-                                </asp:LinkButton>
-                            </ItemTemplate>
-                        </asp:Repeater>
-
-                        <asp:LinkButton ID="lnkNext" runat="server" CssClass="btn btn-outline-primary btn-sm"
-                            OnClick="btnNext_Click" ToolTip="Próxima">»</asp:LinkButton>
-
-                        <asp:LinkButton ID="lnkLast" runat="server" CssClass="btn btn-outline-primary btn-sm"
-                            OnClick="btnLast_Click" ToolTip="Última">»»</asp:LinkButton>
+                        <asp:Button ID="btnProximo" runat="server"
+                            Text="Próxima"
+                            CssClass="btn btn-outline-primary btn-sm"
+                            OnClick="btnProximo_Click" />
                     </div>
                 </div>
+            </div>
         </div>
     </div>
-
-    <!-- MODAL -->
     <div class="modal fade" id="modalAgendamento" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -167,17 +93,19 @@
                 <div class="modal-body">
                     <asp:HiddenField ID="hfIdAgendamento" runat="server" />
                     <div class="row g-3">
-                        <div class="mb-3">
+                        <div class="mb-3 text-start form-outline">
                             <label class="form-label text-black">Serviço</label>
                             <asp:DropDownList ID="ddlServico" runat="server" CssClass="form-control" />
                             <asp:CustomValidator ID="cvServico" runat="server"
                                 ControlToValidate="ddlServico"
                                 OnServerValidate="cvServico_ServerValidate"
-                                ErrorMessage="Selecione um serviço."
+                                ErrorMessage="Selecione algum serviço"
                                 Display="Dynamic"
+                                ValidationGroup="Agendamentos"
+                                ValidateEmptyText="true"
                                 CssClass="text-danger" />
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 text-start form-outline">
                             <label class="form-label text-black">Cliente</label>
                             <asp:TextBox ID="txtCliente" runat="server" CssClass="form-control" />
                             <asp:CustomValidator ID="cvCliente" runat="server"
@@ -185,23 +113,28 @@
                                 OnServerValidate="cvCliente_ServerValidate"
                                 ErrorMessage="Digite pelo menos 3 caracteres."
                                 Display="Dynamic"
+                                ValidationGroup="Agendamentos"
+                                ValidateEmptyText="true"
                                 CssClass="text-danger" />
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 text-start form-outline">
                             <label class="form-label text-black">Data e Hora</label>
                             <asp:TextBox ID="txtDataHora" runat="server" CssClass="form-control" TextMode="DateTimeLocal" />
                             <asp:CustomValidator ID="cvDataHora" runat="server"
                                 ControlToValidate="txtDataHora"
                                 OnServerValidate="cvDataHora_ServerValidate"
-                                ErrorMessage="Informe uma data válida futura."
+                                ErrorMessage="A data e hora devem ser pelo menos 2 horas à frente."
                                 Display="Dynamic"
+                                ValidationGroup="Agendamentos"
+                                ValidateEmptyText="true"
                                 CssClass="text-danger" />
                         </div>
                     </div>
+                    <asp:Label ID="lblError" runat="server" CssClass="text-danger mb-2" Visible="false"></asp:Label>
                 </div>
                 <div class="modal-footer">
                     <asp:Button ID="btnSalvar" runat="server" Text="Salvar"
-                        CssClass="btn btn-success" OnClick="btnSalvar_Click" />
+                        CssClass="btn btn-success" OnClick="btnSalvar_Click" CausesValidation="true" ValidationGroup="Agendamentos"/>
                     <asp:Button ID="btnCancelar" runat="server" Text="Cancelar"
                         CssClass="btn btn-outline-secondary"
                         data-bs-dismiss="modal" OnClick="btnCancelar_Click"

@@ -14,5 +14,6 @@ namespace Application.Repositories
         int CountSimultaneousAppointments(int serviceId, DateTime scheduledDateTime);
         bool ExistsAtSameTime(int serviceId, DateTime scheduledDateTime);
         PagedResult<Appointment> GetByUser(string responsibleUser, int page, int pageSize);
+        int CountTotalAppointments();
     }
 }

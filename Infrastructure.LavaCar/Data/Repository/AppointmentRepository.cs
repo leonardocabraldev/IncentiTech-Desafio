@@ -232,5 +232,16 @@ namespace Infrastructure.LavaCar.Data.Repository
                 PageSize = pageSize
             };
         }
+
+        public int CountTotalAppointments()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var command = new SqlCommand(
+                    "SELECT COUNT(*) FROM Appointments WHERE IsActive = 1", connection);
+                return (int)command.ExecuteScalar();
+            }
+        }
     }
 }

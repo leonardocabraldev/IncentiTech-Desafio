@@ -97,12 +97,131 @@ textarea {
     transition: all 0.2s ease-in-out;
 }
 
-    input:focus,
-    select:focus,
-    textarea:focus {
-        border-color: #4a90e2;
-        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
-        outline: none;
-    }
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+    outline: none;
+}
+
+.page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.content-flex {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.scroll-area {
+    flex: 1;
+    height: 60vh;
+    overflow-y: auto;
+    border: 1px solid #e5e5e5;
+    background: #fff;
+}
+
+.pagination-bar button.active {
+    background: #0d6efd;
+    color: #fff;
+    border-color: #0d6efd;
+}
+
+.dashboard-card {
+    border: none;
+    border-radius: 1rem;
+    background: #ffffff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-header {
+    padding: 1.7rem;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dashboard-header h2 {
+    margin: 0;
+    font-weight: 700;
+    color: #333;
+}
+
+.dashboard-header i {
+    font-size: 1.9rem;
+    color: #0d6efd;
+}
+
+.dashboard-footer {
+    border: 1px solid #e5e5e5;
+    padding: 0.9rem 1.2rem;
+    background-color: #fff !important;
+    border-radius: 0 0 1rem 1rem;
+}
+
+.dashboard-footer .btn {
+    border-radius: 8px;
+}
+
+.dashboard-footer .page-btn.active {
+    background: #0d6efd;
+    color: #fff;
+    border-color: #0d6efd;
+}
+
+.btn-modern {
+    border-radius: 8px !important;
+    padding: 0.55rem 1.2rem !important;
+    font-weight: 600;
+}
+
+.btn-sm {
+    padding: 4px 10px !important;
+    border-radius: 6px !important;
+    font-size: 0.85rem !important;
+    font-weight: 500;
+}
+
+.modal-content {
+    border-radius: 1rem;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    border-radius: 1rem 1rem 0 0;
+}
+
+.form-outline input,
+.form-outline select {
+    border: 1px solid #bdbdbd;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    height: 2.5rem;
+    background-color: #fff;
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+}
+
+.form-outline input:focus,
+.form-outline select:focus {
+    border-color: #3b71ca;
+    box-shadow: 0 0 0 0.15rem rgba(59, 113, 202, 0.25);
+}
+
+.form-outline .form-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+    color: #495057;
+}
+
 
 

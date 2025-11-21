@@ -6,7 +6,6 @@ using Shared.DTOs.Appointments.Create;
 using Shared.DTOs.Appointments.Update;
 using System;
 using System.Configuration;
-using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -18,10 +17,17 @@ namespace Web.LavaCar
         private IServiceRepository _serviceRepository;
 
         private const int PageSize = 15;
+
         private int CurrentPage
         {
             get => (int?)ViewState["CurrentPage"] ?? 1;
             set => ViewState["CurrentPage"] = value < 1 ? 1 : value;
+        }
+
+        private int TotalPages
+        {
+            get => (int?)ViewState["TotalPages"] ?? 1;
+            set => ViewState["TotalPages"] = value < 1 ? 1 : value;
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -40,89 +46,58 @@ namespace Web.LavaCar
         private void LoadAppointments(int page)
         {
             CurrentPage = page;
-            var service = new GetAppointmentsByUser(_appointmentRepository, _serviceRepository);
-            var appointments = service.Execute(Session["AuthToken"]?.ToString(), CurrentPage, PageSize);
 
-            gvAgendamentos.DataSource = appointments.Items;
+            var service = new GetAppointmentsByUser(_appointmentRepository, _serviceRepository);
+            var result = service.Execute(Session["AuthToken"]?.ToString(), CurrentPage, PageSize);
+
+            gvAgendamentos.DataSource = result.Items;
             gvAgendamentos.DataBind();
 
-            BindPagination(appointments.TotalCount);
-        }
+            TotalPages = (int)Math.Ceiling(result.TotalCount / (double)PageSize);
 
-        private void BindPagination(int totalCount)
+            int firstItem = result.TotalCount == 0 ? 0 : ((CurrentPage - 1) * PageSize) + 1;
+            int lastItem = Math.Min(CurrentPage * PageSize, result.TotalCount);
+
+            lblPaginaInfo.Text = $"Página {CurrentPage} de {TotalPages} — mostrando {firstItem}-{lastItem} de {result.TotalCount}";
+        }
+        protected void btnAnterior_Click(object sender, EventArgs e)
         {
-            int totalPages = (int)Math.Ceiling(totalCount / (double)PageSize);
-            ViewState["TotalPages"] = totalPages;
+            if (CurrentPage > 1)
+                CurrentPage--;
 
-            var pages = Enumerable.Range(1, totalPages)
-                .Select(p => new { PageNumber = p, IsCurrent = p == CurrentPage })
-                .ToList();
-
-            rptPaginacao.DataSource = pages;
-            rptPaginacao.DataBind();
-
-            int firstItem = totalCount == 0 ? 0 : ((CurrentPage - 1) * PageSize) + 1;
-            int lastItem = Math.Min(CurrentPage * PageSize, totalCount);
-            lblPaginaInfo.Text = $"Mostrando {firstItem}-{lastItem} de {totalCount}";
-
-
-            bool hasPrev = CurrentPage > 1;
-            bool hasNext = CurrentPage < totalPages;
-
-            lnkFirst.Enabled = hasPrev;
-            lnkPrev.Enabled = hasPrev;
-            lnkNext.Enabled = hasNext;
-            lnkLast.Enabled = hasNext;
-
-            ToggleDisabledClass(lnkFirst, !hasPrev);
-            ToggleDisabledClass(lnkPrev, !hasPrev);
-            ToggleDisabledClass(lnkNext, !hasNext);
-            ToggleDisabledClass(lnkLast, !hasNext);
+            LoadAppointments(CurrentPage);
         }
 
-        protected void rptPaginacao_ItemCommand(object source, RepeaterCommandEventArgs e)
+        protected void btnProximo_Click(object sender, EventArgs e)
         {
-            if (e.CommandName == "GoPage")
-            {
-                int page = int.Parse(e.CommandArgument.ToString());
-                LoadAppointments(page);
-            }
-        }
+            if (CurrentPage < TotalPages)
+                CurrentPage++;
 
-        protected void btnPrev_Click(object sender, EventArgs e)
-        {
-            LoadAppointments(CurrentPage - 1);
+            LoadAppointments(CurrentPage);
         }
-
-        protected void btnNext_Click(object sender, EventArgs e)
-        {
-            LoadAppointments(CurrentPage + 1);
-        }
-
+        
         protected void gvAgendamentos_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            LoadAppointmentsInDropBox();
+            LoadAppointmentsInDropDown();
             int id = Convert.ToInt32(e.CommandArgument);
 
             var isEditing = e.CommandName == "Editar";
             var isRemoving = e.CommandName == "Remover";
+
             if (isEditing)
             {
                 var ap = _appointmentRepository.GetById(id);
                 if (ap == null) return;
 
-                LoadAppointmentsInDropBox();
                 ddlServico.SelectedValue = ap.ServiceId.ToString();
                 txtCliente.Text = ap.ClientName;
                 txtDataHora.Text = ap.ScheduledDateTime.ToString("yyyy-MM-ddTHH:mm");
                 hfIdAgendamento.Value = ap.Id.ToString();
 
+                lblError.Visible = false;
+
                 ScriptManager.RegisterStartupScript(
-                    this,
-                    GetType(),
-                    "ShowModal_" + Guid.NewGuid(),
-                    "abrirModal();",
-                    true);
+                    this, GetType(), "ShowModal_" + Guid.NewGuid(), "abrirModal();", true);
             }
             else if (isRemoving)
             {
@@ -136,30 +111,23 @@ namespace Web.LavaCar
         protected void btnNovo_Click(object sender, EventArgs e)
         {
             CleanModal();
-            LoadAppointmentsInDropBox();
+            LoadAppointmentsInDropDown();
+            lblError.Visible = false;
             ScriptManager.RegisterStartupScript(
-                this,
-                GetType(),
-                "ShowModal_" + Guid.NewGuid(),
-                "abrirModal();",
-                true);
+                this, GetType(), "ShowModal_" + Guid.NewGuid(), "abrirModal();", true);
         }
 
         protected void btnVoltar_Click(object sender, EventArgs e)
         {
             Response.Redirect("Home.aspx");
         }
-
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
+            Page.Validate("Agendamentos");
             if (!Page.IsValid)
             {
                 ScriptManager.RegisterStartupScript(
-                    this,
-                    GetType(),
-                    "ShowModal_" + Guid.NewGuid(),
-                    "abrirModal();",
-                    true);
+                    this, GetType(), "ShowModal_" + Guid.NewGuid(), "abrirModal();", true);
                 return;
             }
 
@@ -175,36 +143,45 @@ namespace Web.LavaCar
                 int id = int.Parse(hfIdAgendamento.Value);
                 var update = new UpdateAppointment(_appointmentRepository, _serviceRepository);
                 var input = new UpdateAppointmentInput(id, serviceId, clientName, scheduledDateTime, responsibleUser);
-                var ok = update.Execute(input);
+
+                bool ok = update.Execute(input);
 
                 if (!ok)
                 {
-                    // Mantém modal aberto se regras falharem
+                    lblError.Text = "Máximo de agendamentos por horário  de serviço atingido!";
+                    lblError.Visible = true;
                     ScriptManager.RegisterStartupScript(
-                        this,
-                        GetType(),
-                        "ShowModal_" + Guid.NewGuid(),
-                        "abrirModal();",
-                        true);
+                        this, GetType(), "ShowModal_" + Guid.NewGuid(), "abrirModal();", true);
                     return;
                 }
+
+                lblError.Visible = false;
             }
             else
             {
-                var create = new CreateAppointments(_appointmentRepository);
+                var create = new CreateAppointments(_appointmentRepository, _serviceRepository);
                 var input = new CreateAppointmentInput(serviceId, clientName, scheduledDateTime, responsibleUser);
-                create.Execute(input);
+                var ok = create.Execute(input);
+
+                if (!ok)
+                {
+                    lblError.Text = "Máximo de agendamentos por horário  de serviço atingido!";
+                    lblError.Visible = true;
+                    ScriptManager.RegisterStartupScript(
+                        this, GetType(), "ShowModal_" + Guid.NewGuid(), "abrirModal();", true);
+                    return;
+                }
+
+                lblError.Visible = false;
             }
 
-            hfIdAgendamento.Value = "";
             CleanModal();
             LoadAppointments(CurrentPage);
         }
 
         protected void cvServico_ServerValidate(object source, ServerValidateEventArgs args)
         {
-            args.IsValid = !string.IsNullOrEmpty(ddlServico.SelectedValue) &&
-                           ddlServico.SelectedValue != "0";
+            args.IsValid = !string.IsNullOrWhiteSpace(args.Value);
         }
 
         protected void cvCliente_ServerValidate(object source, ServerValidateEventArgs args)
@@ -217,7 +194,8 @@ namespace Web.LavaCar
         {
             if (DateTime.TryParse(args.Value, out DateTime agendamento))
             {
-                args.IsValid = agendamento > DateTime.Now;
+                DateTime minimoPermitido = DateTime.Now.AddHours(2);
+                args.IsValid = agendamento > minimoPermitido;
             }
             else
             {
@@ -225,13 +203,15 @@ namespace Web.LavaCar
             }
         }
 
-        private void LoadAppointmentsInDropBox()
+ 
+
+        private void LoadAppointmentsInDropDown()
         {
             ddlServico.Items.Clear();
 
-            var servicos = _serviceRepository.GetByUser(Session["AuthToken"]?.ToString(), 1, 100);
+            var servicos = _serviceRepository.GetAllActiveByUser(Session["AuthToken"]?.ToString());
 
-            ddlServico.DataSource = servicos.Items;
+            ddlServico.DataSource = servicos;
             ddlServico.DataTextField = "Name";
             ddlServico.DataValueField = "Id";
             ddlServico.DataBind();
@@ -250,25 +230,6 @@ namespace Web.LavaCar
             txtCliente.Text = "";
             txtDataHora.Text = "";
             hfIdAgendamento.Value = "";
-        }
-
-        private void ToggleDisabledClass(LinkButton btn, bool disabled)
-        {
-            var cls = btn.CssClass ?? "page-link";
-            cls = cls.Replace(" disabled", "");
-            if (disabled) cls += " disabled";
-            btn.CssClass = cls;
-        }
-
-        protected void btnFirst_Click(object sender, EventArgs e)
-        {
-            LoadAppointments(1);
-        }
-
-        protected void btnLast_Click(object sender, EventArgs e)
-        {
-            int totalPages = (int)(ViewState["TotalPages"] ?? 1);
-            LoadAppointments(totalPages < 1 ? 1 : totalPages);
         }
     }
 }

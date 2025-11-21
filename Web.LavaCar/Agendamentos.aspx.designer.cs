@@ -60,49 +60,22 @@ namespace Web.LavaCar
         protected global::System.Web.UI.WebControls.Label lblPaginaInfo;
 
         /// <summary>
-        /// Controle lnkFirst.
+        /// Controle btnAnterior.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkFirst;
+        protected global::System.Web.UI.WebControls.Button btnAnterior;
 
         /// <summary>
-        /// Controle lnkPrev.
+        /// Controle btnProximo.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkPrev;
-
-        /// <summary>
-        /// Controle rptPaginacao.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptPaginacao;
-
-        /// <summary>
-        /// Controle lnkNext.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkNext;
-
-        /// <summary>
-        /// Controle lnkLast.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkLast;
+        protected global::System.Web.UI.WebControls.Button btnProximo;
 
         /// <summary>
         /// Controle btnClose.
@@ -175,6 +148,15 @@ namespace Web.LavaCar
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CustomValidator cvDataHora;
+
+        /// <summary>
+        /// Controle lblError.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblError;
 
         /// <summary>
         /// Controle btnSalvar.

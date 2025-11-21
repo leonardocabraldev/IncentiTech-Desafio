@@ -141,7 +141,7 @@
                 };
             }
 
-            public List<Service> GetAllActive()
+            public List<Service> GetAllActiveByUser(string responsibleUser)
             {
                 var items = new List<Service>();
 
@@ -155,6 +155,7 @@
               FROM Services
               WHERE IsActive = 1
               ORDER BY Id", connection);
+                    command.Parameters.AddWithValue("@ResponsibleUser", responsibleUser);
 
                     using (var reader = command.ExecuteReader())
                     {
@@ -176,6 +177,7 @@
 
                 return items;
             }
+
         }
     }
 
