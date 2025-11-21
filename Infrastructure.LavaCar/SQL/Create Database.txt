@@ -1,0 +1,55 @@
+﻿CREATE DATABASE LavaCar;
+GO
+
+USE LavaCar;
+GO
+
+
+CREATE TABLE Services (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(100) NOT NULL,
+    Description NVARCHAR(255) NOT NULL,
+    MaximumConcurrentAppointments INT NOT NULL,
+    ImagePath NVARCHAR(255) NULL,
+    IsActive BIT NOT NULL DEFAULT 1,
+    CreatedAt DATETIME NOT NULL DEFAULT GETDATE(),
+    UpdatedAt DATETIME NOT NULL DEFAULT GETDATE(),
+    ResponsibleUser NVARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Appointments (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    ServiceId INT NOT NULL,
+    ClientName NVARCHAR(100) NOT NULL,
+    AppointmentDateTime DATETIME NOT NULL,
+    IsActive BIT NOT NULL DEFAULT 1,
+    CreatedAt DATETIME NOT NULL DEFAULT GETDATE(),
+    UpdatedAt DATETIME NOT NULL DEFAULT GETDATE(),
+    ResponsibleUser NVARCHAR(100) NOT NULL,
+    FOREIGN KEY (ServiceId) REFERENCES Services(Id)
+);
+
+
+INSERT INTO Services (Name, Description, MaximumConcurrentAppointments, ImagePath, IsActive, CreatedAt, UpdatedAt, ResponsibleUser) VALUES
+('Lavagem Simples', 'Lavagem externa básica com shampoo neutro', 3, NULL, 1, GETDATE(), GETDATE(), 'Leonardo'),
+('Lavagem Completa', 'Lavagem interna e externa com aspiração detalhada', 2, NULL, 1, GETDATE(), GETDATE(), 'Leonardo'),
+('Higienização Interna', 'Limpeza profunda de estofados e carpetes', 1, NULL, 1, GETDATE(), GETDATE(), 'Leonardo'),
+('Polimento Premium', 'Polimento profissional para restauração de brilho', 1, NULL, 1, GETDATE(), GETDATE(), 'Admin'),
+('Lavagem a Seco', 'Lavagem ecológica sem uso excessivo de água', 2, NULL, 1, GETDATE(), GETDATE(), 'Operador1'),
+('Enceramento Profundo', 'Aplicação de cera de alta performance para proteção', 2, NULL, 1, GETDATE(), GETDATE(), 'Leonardo'),
+('Limpeza de Motor', 'Limpeza cuidadosa do cofre do motor', 1, NULL, 1, GETDATE(), GETDATE(), 'Operador2'),
+('Lavagem Detalhada', 'Lavagem minuciosa com acabamento em todas as partes', 1, NULL, 1, GETDATE(), GETDATE(), 'Leonardo'),
+('Cristalização de Pintura', 'Proteção avançada e brilho duradouro para a pintura', 1, NULL, 1, GETDATE(), GETDATE(), 'Admin'),
+('Desinfecção Interna', 'Aplicação de produto sanitizante em todo o interior', 2, NULL, 1, GETDATE(), GETDATE(), 'Leonardo');
+
+INSERT INTO Appointments (ServiceId, ClientName, AppointmentDateTime, IsActive, CreatedAt, UpdatedAt, ResponsibleUser) VALUES
+(1, 'João Silva', DATEADD(HOUR, 3, GETDATE()), 1, GETDATE(), GETDATE(), 'Leonardo'),
+(2, 'Maria Souza', DATEADD(HOUR, 5, GETDATE()), 1, GETDATE(), GETDATE(), 'Leonardo'),
+(3, 'Carlos Lima', DATEADD(HOUR, 6, GETDATE()), 1, GETDATE(), GETDATE(), 'Leonardo'),
+(4, 'André Ferreira', DATEADD(DAY, 1, DATEADD(HOUR, 2, GETDATE())), 1, GETDATE(), GETDATE(), 'Admin'),
+(5, 'Beatriz Rocha', DATEADD(DAY, 1, DATEADD(HOUR, 4, GETDATE())), 1, GETDATE(), GETDATE(), 'Operador1'),
+(6, 'Fernanda Alves', DATEADD(DAY, 2, DATEADD(HOUR, 3, GETDATE())), 1, GETDATE(), GETDATE(), 'Leonardo'),
+(7, 'Ricardo Mendes', DATEADD(DAY, 2, DATEADD(HOUR, 5, GETDATE())), 1, GETDATE(), GETDATE(), 'Operador2'),
+(8, 'Paulo Matos', DATEADD(DAY, 3, DATEADD(HOUR, 2, GETDATE())), 1, GETDATE(), GETDATE(), 'Leonardo'),
+(9, 'Sabrina Nunes', DATEADD(DAY, 3, DATEADD(HOUR, 6, GETDATE())), 1, GETDATE(), GETDATE(), 'Admin'),
+(10, 'Marcos Teixeira', DATEADD(DAY, 4, DATEADD(HOUR, 3, GETDATE())), 1, GETDATE(), GETDATE(), 'Leonardo');
