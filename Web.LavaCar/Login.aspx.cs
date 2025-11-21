@@ -18,28 +18,28 @@ namespace Web.LavaCar
 
         }
 
-        protected void CustomValidator1_ServerValidate(object source, System.Web.UI.WebControls.ServerValidateEventArgs args)
+        protected void cvUsername_ServerValidate(object source, System.Web.UI.WebControls.ServerValidateEventArgs args)
         {
-            string email = args.Value;
-            var regex = new Regex(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
-            args.IsValid = regex.IsMatch(email);
+            args.IsValid = !string.IsNullOrWhiteSpace(args.Value);
+        }
+        protected void cvPassword_ServerValidate(object source, System.Web.UI.WebControls.ServerValidateEventArgs args)
+        {
+            args.IsValid = !string.IsNullOrWhiteSpace(args.Value) && args.Value.Length > 5;
         }
 
-        protected void Button1_Click(object sender, EventArgs e)
+
+        protected void btLogar_Click(object sender, EventArgs e)
         {
-            var loginInput = new LoginUserInput(txtEmail.Text, txtSenha.Text);
+            Page.Validate("Login");
+            if (!Page.IsValid)
+                return;
+
+            var loginInput = new LoginUserInput(txtUsername.Text, txtPassword.Text);
             var service = new LoginUser();
-
             var result = service.Execute(loginInput);
-            if (string.IsNullOrEmpty(result.Token))
-            {
 
-            }
-            else
-            {
-                Session["AuthToken"] = result.Token;
-                Response.Redirect("Home.aspx");
-            }
+            Session["AuthToken"] = result.Token;
+            Response.Redirect("Home.aspx");
         }
     }
 }
