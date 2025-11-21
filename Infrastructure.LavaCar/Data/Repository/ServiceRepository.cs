@@ -140,6 +140,42 @@
                     PageSize = pageSize
                 };
             }
+
+            public List<Service> GetAllActive()
+            {
+                var items = new List<Service>();
+
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+
+                    var command = new SqlCommand(
+                        @"SELECT Id, Name, Description, MaximumConcurrentAppointments, IsActive, 
+                     CreatedAt, UpdatedAt, ResponsibleUser
+              FROM Services
+              WHERE IsActive = 1
+              ORDER BY Id", connection);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            items.Add(new Service(
+                                reader.GetInt32(0),
+                                reader.GetString(1),
+                                reader.GetString(2),
+                                reader.GetInt32(3),
+                                reader.GetBoolean(4),
+                                reader.GetDateTime(5),
+                                reader.GetDateTime(6),
+                                reader.GetString(7)
+                            ));
+                        }
+                    }
+                }
+
+                return items;
+            }
         }
     }
 

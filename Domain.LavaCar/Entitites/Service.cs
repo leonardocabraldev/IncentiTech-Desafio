@@ -38,6 +38,34 @@ namespace Domain.LavaCar.Entitites
                 );
         }
 
+        public void Update(string name, string description, int max)
+        {
+            bool changed = false;
+
+            if (Name != name)
+            {
+                Name = name;
+                changed = true;
+            }
+
+            if (Description != description)
+            {
+                Description = description;
+                changed = true;
+            }
+
+            if (MaximumConcurrentAppointments != max)
+            {
+                MaximumConcurrentAppointments = max;
+                changed = true;
+            }
+
+            if (changed)
+            {
+                UpdatedAt = DateTime.Now;
+            }
+        }
+
         public void Disable()
         {
             IsActive = false;

@@ -18,9 +18,7 @@ namespace Application.Services.Servico
             if (service == null)
                 return false;
 
-            service.Name = input.Name;
-            service.Description = input.Description;
-            service.MaximumConcurrentAppointments = input.MaximumConcurrentAppointments;
+            service.Update(input.Name, input.Description, input.MaximumConcurrentAppointments);
 
             _serviceRepository.Save(service);
             return true;

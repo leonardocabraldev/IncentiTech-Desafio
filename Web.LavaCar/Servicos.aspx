@@ -157,6 +157,14 @@
                         <label class="form-label text-black">Nome do Serviço</label>
                         <asp:TextBox ID="txtNome" runat="server" CssClass="form-control"
                                      placeholder="Ex: Lavagem Completa" />
+                       <asp:CustomValidator ID="cvNome" runat="server"
+                            ControlToValidate="txtNome"
+                            CssClass="text-danger small"
+                            Display="Dynamic"
+                            ValidationGroup="Servicos"
+                            ValidateEmptyText="true"
+                            ErrorMessage="Informe um nome (mín. 3 caracteres)."
+                            OnServerValidate="cvNome_ServerValidate" />
                     </div>
 
                     <div class="mb-3">
@@ -169,16 +177,23 @@
                         <label class="form-label text-black">Máx. Agendamentos</label>
                         <asp:TextBox ID="txtMaxAgend" runat="server" CssClass="form-control"
                                      TextMode="Number" min="1" />
+                        <asp:CustomValidator ID="cvMaxAgend" runat="server"
+                            ControlToValidate="txtMaxAgend"
+                            CssClass="text-danger small"
+                            Display="Dynamic"
+                            ValidationGroup="Servicos"
+                            ValidateEmptyText="true"
+                            ErrorMessage="Informe um número inteiro maior ou igual a 1."
+                            OnServerValidate="cvMaxAgend_ServerValidate" />
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <asp:Button ID="btnSalvar" runat="server" Text="Salvar"
-                                CssClass="btn btn-success" OnClick="btnSalvar_Click" />
+                    <asp:Button ID="btnSalvar" runat="server" Text="Salvar" CssClass="btn btn-success" OnClick="btnSalvar_Click" CausesValidation="true" ValidationGroup="Servicos" />
 
                     <asp:Button ID="btnCancelar" runat="server" Text="Cancelar"
                                 class="btn btn-outline-secondary"
-                                data-bs-dismiss="modal" OnClick="btnCancelar_Click" />
+                                data-bs-dismiss="modal" OnClick="btnCancelar_Click" CausesValidation="false" />
                 </div>
 
             </div>
@@ -186,14 +201,12 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
         function abrirModal() {
             var modal = new bootstrap.Modal(document.getElementById('modalNovoServico'));
             modal.show();
         }
     </script>
-
 </form>
 </body>
 

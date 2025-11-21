@@ -6,6 +6,7 @@ using Shared.DTOs.Servicos.Update;
 using System;
 using System.Configuration;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 
 namespace Web.LavaCar
 {
@@ -78,6 +79,13 @@ namespace Web.LavaCar
 
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
+            Page.Validate("Servicos");
+            if(!Page.IsValid)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "abrirModal", "abrirModal();", true);
+                return;
+            }
+
             string nome = txtNome.Text;
             string descricao = txtDescricao.Text;
             int max = int.Parse(txtMaxAgend.Text);
@@ -114,6 +122,17 @@ namespace Web.LavaCar
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
             CleanModal();
+        }
+
+        protected void cvNome_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            args.IsValid = !string.IsNullOrWhiteSpace(args.Value) && args.Value.Trim().Length >= 3;
+        }
+
+        protected void cvMaxAgend_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            int v;
+            args.IsValid = int.TryParse(args.Value, out v) && v >= 1;
         }
     }
 }

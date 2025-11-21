@@ -87,6 +87,15 @@ namespace Web.LavaCar
         protected global::System.Web.UI.WebControls.TextBox txtNome;
 
         /// <summary>
+        /// Controle cvNome.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator cvNome;
+
+        /// <summary>
         /// Controle txtDescricao.
         /// </summary>
         /// <remarks>
@@ -103,6 +112,15 @@ namespace Web.LavaCar
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtMaxAgend;
+
+        /// <summary>
+        /// Controle cvMaxAgend.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator cvMaxAgend;
 
         /// <summary>
         /// Controle btnSalvar.
