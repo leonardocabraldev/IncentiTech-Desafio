@@ -11,7 +11,7 @@ Todos os scripts do banco de dados estão dentro da pasta `Infrastructure/SQL`.
 1. **Criar banco e tabelas**
    - Abra o SQL Server Management Studio (SSMS) ou outro cliente SQL.
    - Navegue até a pasta `Infrastructure/SQL`.
-   - Execute o script `CreateDatabase.sql` para criar o banco e as tabelas.
+   - Execute o script `Create Database.sql` para criar o banco e as tabelas.
 
 2. **Popular dados de teste (opcional)**
    - Execute o script `Create Database.sql` para inserir serviços e usuários de teste.
