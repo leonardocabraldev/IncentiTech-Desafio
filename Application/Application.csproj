@@ -5,11 +5,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{652D4414-2E0C-4B7D-8640-1282E9B310BD}</ProjectGuid>
+    <ProjectGuid>{DCA3361B-8D2F-4DBB-866D-B7432F799E54}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Domain.LavaCar</RootNamespace>
-    <AssemblyName>Domain.LavaCar</AssemblyName>
+    <RootNamespace>Application.Lavacar</RootNamespace>
+    <AssemblyName>Application</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -47,9 +47,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entitites\Appoinment.cs" />
-    <Compile Include="Entitites\Service.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\IAppointmentRepository.cs" />
+    <Compile Include="Repositories\IServiceRepository.cs" />
+    <Compile Include="Services\Appointments\CreateAppointments.cs" />
+    <Compile Include="Services\Appointments\DeleteAppointment.cs" />
+    <Compile Include="Services\Appointments\GetAppointmentsByUser.cs" />
+    <Compile Include="Services\Appointments\UpdateAppointment.cs" />
+    <Compile Include="Services\Login\LoginUser.cs" />
+    <Compile Include="Services\Service\CreateService.cs" />
+    <Compile Include="Services\Service\DeleteService.cs" />
+    <Compile Include="Services\Service\GetServiceById.cs" />
+    <Compile Include="Services\Service\GetServiceByUser.cs" />
+    <Compile Include="Services\Service\UpdateService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Domain.LavaCar\Domain.LavaCar.csproj">
+      <Project>{652d4414-2e0c-4b7d-8640-1282e9b310bd}</Project>
+      <Name>Domain.LavaCar</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shared\Shared.csproj">
+      <Project>{06e98504-f54b-47d7-be52-d036b4030f81}</Project>
+      <Name>Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -59,6 +79,7 @@
     <PropertyGroup>
       <ErrorText>Este projeto faz referência a pacotes do NuGet que não estão presentes neste computador. Use a Restauração de Pacotes do NuGet para baixá-los.  Para obter mais informações, consulte http://go.microsoft.com/fwlink/?LinkID=322105. O arquivo ausente é {0}.</ErrorText>
     </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
 </Project>
