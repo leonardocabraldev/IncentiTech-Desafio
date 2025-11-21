@@ -1,13 +1,12 @@
-﻿using Shared.LavaCar.DTOs;
+﻿using Shared.DTOs;
 
-namespace Application.Lavacar.Services.Login
+namespace Application.Services.Login
 {
     public class LoginUser
     {
-       public LoginOutputDTO Execute(LoginInputDTO input)
-       {
-            var newToken = $"{input.Email}";
-            return new LoginOutputDTO(newToken);
-       }
+        public LoginUserOutput Execute(LoginUserInput input)
+        {
+            return new LoginUserOutput(input.Email);
+        }
     }
 }
